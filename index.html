@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSL Welcoming Event Registration</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f6f5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 480px;
+            background-color: #ffffff;
+            min-height: 100vh;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            padding: 0;
+            background-color: #ffffff;
+            position: relative;
+        }
+
+        .pattern-side-left, .pattern-side-right {
+            width: 28px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 36'%3E%3Cg fill='none' stroke='%232d6a4f'%3E%3Cpolygon points='14,2 24,12 14,22 4,12' stroke-width='2.5'/%3E%3Ccircle cx='7' cy='29' r='2.5' fill='%232d6a4f' stroke='none'/%3E%3Ccircle cx='21' cy='29' r='2.5' fill='%232d6a4f' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat-y;
+            background-size: 28px 36px;
+            border-right: 2px solid #2d6a4f;
+            border-left: 2px solid #2d6a4f;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            text-align: center;
+            flex-grow: 1;
+            padding: 15px 10px 10px;
+        }
+
+        .logo-box {
+            margin: 5px auto 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* تكبير الشعار بنسبة 25% إضافية */
+        .logo-box img {
+            max-width: 235px;
+            max-height: 132px;
+            object-fit: contain;
+        }
+
+        .event-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1b4332;
+            line-height: 1.1;
+        }
+
+        .event-subtitle {
+            font-size: 15px;
+            color: #52b788;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background-color: #2d6a4f;
+            margin: 10px 14px 14px;
+            padding: 20px 16px;
+            border-radius: 28px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .input-group i.field-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 15px;
+            z-index: 2;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 18px 12px 46px;
+            border-radius: 30px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: #4a5568;
+            background-color: #ffffff;
+        }
+
+        .input-group select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .input-group .arrow-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #718096;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: transparent;
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #ffffff;
+            color: #2d6a4f;
+        }
+
+        /* Success Card */
+        .success-card {
+            display: none;
+            background-color: #2d6a4f;
+            margin: 10px 14px 14px;
+            padding: 20px 14px 14px;
+            border-radius: 28px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .success-card h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+
+        .countdown-container {
+            background-color: #ffffff;
+            border-radius: 22px;
+            padding: 12px 6px;
+            margin: 10px 0 8px;
+            color: #1b4332;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .time-box {
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .time-box .digit {
+            font-size: 18px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .time-box .label {
+            font-size: 11px;
+            color: #718096;
+            margin-top: 1px;
+        }
+
+        .time-separator {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1b4332;
+            margin-bottom: 10px;
+        }
+
+        .countdown-footer-text {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .see-you-text {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 22px;
+            margin: 10px 0 12px;
+        }
+
+        .bottom-pattern-wrapper {
+            border-top: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            padding: 4px 0;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .bottom-pattern-horizontal {
+            height: 24px;
+            width: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 54 30'%3E%3Cg fill='none' stroke='%23ffffff'%3E%3Cpolygon points='3,15 15,27 27,15 15,3' stroke-width='3'/%3E%3Ccircle cx='41' cy='8' r='3.2' fill='%23ffffff' stroke='none'/%3E%3Ccircle cx='41' cy='22' r='3.2' fill='%23ffffff' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-size: 44px 24px;
+        }
+
+        .edit-info-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: 1px dashed rgba(255, 255, 255, 0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 14px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .edit-info-btn:hover {
+            background: #ffffff;
+            color: #2d6a4f;
+        }
+
+        /* Footer Card */
+        .footer-card {
+            background-color: #2d6a4f;
+            margin: 0 14px 14px;
+            padding: 14px;
+            border-radius: 20px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .social-icons-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer-contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            opacity: 0.95;
+        }
+
+        .footer-contact-info div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <!-- Header Section -->
+    <div class="header-section">
+        <div class="pattern-side-left"></div>
+        <div class="header-content">
+            <div class="logo-box">
+                <img src="https://i.ibb.co/YB3qF18v/logo.jpg" alt="MS-LEAGUE Logo">
+            </div>
+            <h1 class="event-title">Welcoming Event</h1>
+            <p class="event-subtitle">Registration</p>
+        </div>
+        <div class="pattern-side-right"></div>
+    </div>
+
+    <!-- Registration Form -->
+    <form id="mslForm" class="form-card">
+        <div class="input-group">
+            <i class="fa-solid fa-user field-icon"></i>
+            <input type="text" id="fullName" placeholder="Full Name" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-id-card field-icon"></i>
+            <select id="gender" required>
+                <option value="" disabled selected>Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-building-columns field-icon"></i>
+            <select id="college" required>
+                <option value="" disabled selected>College (Select institution)</option>
+                <option value="Allcan">Allcan</option>
+                <option value="Atlas">Atlas</option>
+                <option value="Aweliya">Aweliya</option>
+                <option value="CPU">CPU</option>
+                <option value="HiLCoE">HiLCoE</option>
+                <option value="Hope">Hope</option>
+                <option value="Lorcan">Lorcan</option>
+                <option value="New Generation">New Generation</option>
+                <option value="St. Mary">St. Mary</option>
+                <option value="Unity">Unity</option>
+                <option value="Other">Other</option>
+            </select>
+            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-book-open field-icon"></i>
+            <input type="text" id="department" placeholder="Department" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-graduation-cap field-icon"></i>
+            <select id="yearOfStudy" required>
+                <option value="" disabled selected>Year of Study (Select Year)</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="5th Year+">5th Year+</option>
+            </select>
+            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-phone field-icon"></i>
+            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-envelope field-icon"></i>
+            <input type="text" id="telegram" placeholder="Telegram Username">
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Complete Registration</button>
+    </form>
+
+    <!-- Success Confirmation Screen -->
+    <div class="success-card" id="successCard">
+        <h2>Your registration has been successful!</h2>
+
+        <div class="countdown-container">
+            <div class="time-box">
+                <span class="digit" id="days">00</span>
+                <span class="label">days</span>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+                <span class="digit" id="hours">00</span>
+                <span class="label">hours</span>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+                <span class="digit" id="minutes">00</span>
+                <span class="label">minutes</span>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+                <span class="digit" id="seconds">00</span>
+                <span class="label">seconds</span>
+            </div>
+        </div>
+
+        <p class="countdown-footer-text">Left until the event day</p>
+        <div class="see-you-text">See you there!</div>
+
+        <div class="bottom-pattern-wrapper">
+            <div class="bottom-pattern-horizontal"></div>
+        </div>
+
+        <button type="button" class="edit-info-btn" id="editBtn" onclick="enableEditForm()">
+            <i class="fa-solid fa-pen-to-square"></i> Edit Registration Info
+        </button>
+    </div>
+
+    <!-- Footer Card -->
+    <div class="footer-card">
+        <div class="social-icons-row">
+            <i class="fa-brands fa-youtube"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-tiktok"></i>
+            <i class="fa-brands fa-facebook"></i>
+            <i class="fa-brands fa-telegram"></i>
+            <span>@ms_league</span>
+        </div>
+        <div class="footer-contact-info">
+            <div><i class="fa-solid fa-phone"></i> 0962333331/32</div>
+            <div><i class="fa-solid fa-location-dot"></i> Enkulal Fabrica</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyfaAS4AQUvRWgiACy7heImus6MzmTiB-sg87nCXySYbuctYpEyefdAbjhjXWQJ8xdRpg/exec';
+    const form = document.getElementById('mslForm');
+    let targetEventDate = "2026-10-25T09:00:00";
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const isRegistered = localStorage.getItem('msl_registered');
+        if (isRegistered === 'true') {
+            showSuccessScreen();
+        }
+        fetchEventDate();
+    });
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = 'Registering...';
+        btn.disabled = true;
+
+        const data = {
+            fullName: document.getElementById('fullName').value,
+            gender: document.getElementById('gender').value,
+            college: document.getElementById('college').value,
+            department: document.getElementById('department').value,
+            yearOfStudy: document.getElementById('yearOfStudy').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            telegram: document.getElementById('telegram').value
+        };
+
+        localStorage.setItem('msl_user_data', JSON.stringify(data));
+
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) })
+            .then(res => {
+                localStorage.setItem('msl_registered', 'true');
+                btn.innerText = 'Complete Registration';
+                btn.disabled = false;
+                showSuccessScreen();
+            })
+            .catch(err => {
+                localStorage.setItem('msl_registered', 'true');
+                btn.innerText = 'Complete Registration';
+                btn.disabled = false;
+                showSuccessScreen();
+            });
+    });
+
+    function showSuccessScreen() {
+        document.getElementById('mslForm').style.display = 'none';
+        document.getElementById('successCard').style.display = 'block';
+        startCountdown();
+    }
+
+    function enableEditForm() {
+        const savedData = localStorage.getItem('msl_user_data');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            document.getElementById('fullName').value = data.fullName || '';
+            document.getElementById('gender').value = data.gender || '';
+            document.getElementById('college').value = data.college || '';
+            document.getElementById('department').value = data.department || '';
+            document.getElementById('yearOfStudy').value = data.yearOfStudy || '';
+            document.getElementById('phoneNumber').value = data.phoneNumber || '';
+            document.getElementById('telegram').value = data.telegram || '';
+        }
+
+        document.getElementById('successCard').style.display = 'none';
+        document.getElementById('mslForm').style.display = 'block';
+    }
+
+    function fetchEventDate() {
+        if (!scriptURL) return;
+        
+        fetch(scriptURL)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.eventDate) {
+                    targetEventDate = data.eventDate;
+                }
+            })
+            .catch(err => console.log('Using default date'));
+    }
+
+    function startCountdown() {
+        function updateTimer() {
+            const eventTime = new Date(targetEventDate).getTime();
+            const now = new Date().getTime();
+            const distance = eventTime - now;
+
+            if (distance > 0) {
+                document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById("seconds").innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+            } else {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+            }
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+</script>
+
+</body>
+                  </html>
