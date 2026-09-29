@@ -6,8 +6,6 @@
     <title>MSL Welcoming Event Registration</title>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase JS Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -434,15 +432,26 @@
 </div>
 
 <script>
-    // 1. ضع بيانات Supabase الخاصة بكِ هنا
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    
-    // تهيئة عميل Supabase
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // 1. إعدادات GitHub الخاصة بالمستودع
+    const GITHUB_REPO = "username/repo-name"; // استبدلي بـ: اسم_المستخدم/اسم_المستودع
+    const FILE_PATH = "students.json";
+    const GITHUB_TOKEN = "github_pat_11AAAAAAA_XXXXXXXXXXXXXX"; // GitHub Personal Access Token
 
     const form = document.getElementById('mslForm');
     let targetEventDate = "2026-10-25T09:00:00";
+
+    // دالة الترميز الآمن لدعم اللغة العربية والرموز
+    function unicodeToBase64(str) {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
+    }
+
+    function base64ToUnicode(str) {
+        return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
         const isRegistered = localStorage.getItem('msl_registered');
@@ -458,25 +467,53 @@
         btn.disabled = true;
 
         const payload = {
-            full_name: document.getElementById('fullName').value,
+            fullName: document.getElementById('fullName').value,
             gender: document.getElementById('gender').value,
             college: document.getElementById('college').value,
             department: document.getElementById('department').value,
-            year_of_study: document.getElementById('yearOfStudy').value,
-            phone_number: document.getElementById('phoneNumber').value,
-            telegram: document.getElementById('telegram').value
+            yearOfStudy: document.getElementById('yearOfStudy').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            telegram: document.getElementById('telegram').value,
+            registeredAt: new Date().toISOString()
         };
 
         try {
-            const { data, error } = await _supabase
-                .from('registrations')
-                .insert([payload]);
+            const getUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`;
+            
+            // 1. جلب الملف الحالي من GitHub
+            const getRes = await fetch(getUrl, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
 
-            if (error) {
-                alert('حدث خطأ أثناء التسجيل: ' + error.message);
-                btn.innerText = 'Complete Registration';
-                btn.disabled = false;
-                return;
+            let currentData = [];
+            let fileSha = "";
+
+            if (getRes.status === 200) {
+                const fileJson = await getRes.json();
+                fileSha = fileJson.sha;
+                const cleanContent = fileJson.content.replace(/\s/g, '');
+                currentData = JSON.parse(base64ToUnicode(cleanContent));
+            }
+
+            // 2. إضافة الطالب الجديد للقائمة
+            currentData.push(payload);
+
+            // 3. رفع الملف المحدث إلى GitHub
+            const putRes = await fetch(getUrl, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: `New Registration: ${payload.fullName}`,
+                    content: unicodeToBase64(JSON.stringify(currentData, null, 2)),
+                    sha: fileSha !== "" ? fileSha : undefined
+                })
+            });
+
+            if (!putRes.ok) {
+                throw new Error(`GitHub API Error: ${putRes.statusText}`);
             }
 
             // حفظ البيانات محلياً للتعديل لاحقاً
@@ -488,7 +525,8 @@
             showSuccessScreen();
 
         } catch (err) {
-            alert('تعذر الإتصال بالسيرفر، يرجى المحاولة لاحقاً');
+            console.error(err);
+            alert('حدث خطأ أثناء التسجيل، يرجى إعادة المحاولة لاحقاً.');
             btn.innerText = 'Complete Registration';
             btn.disabled = false;
         }
@@ -504,12 +542,12 @@
         const savedData = localStorage.getItem('msl_user_data');
         if (savedData) {
             const data = JSON.parse(savedData);
-            document.getElementById('fullName').value = data.full_name || '';
+            document.getElementById('fullName').value = data.fullName || '';
             document.getElementById('gender').value = data.gender || '';
             document.getElementById('college').value = data.college || '';
             document.getElementById('department').value = data.department || '';
-            document.getElementById('yearOfStudy').value = data.year_of_study || '';
-            document.getElementById('phoneNumber').value = data.phone_number || '';
+            document.getElementById('yearOfStudy').value = data.yearOfStudy || '';
+            document.getElementById('phoneNumber').value = data.phoneNumber || '';
             document.getElementById('telegram').value = data.telegram || '';
         }
 
