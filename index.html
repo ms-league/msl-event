@@ -434,6 +434,213 @@
 </div>
 
 <script>
+    // 1. رابط المشروع في Supabase
+    const SUPABASE_URL = 'https://hfmkrgczbxfrjmhznnqo.supabase.co';
+    // 2. ضعي المفتاح الخاص بكِ مكان النص بين القوسين
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbWtyZ2N6YnhmcmptaHpubnFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTExODksImV4cCI6MjEwNjI2NzE4OX0.yzg16vNVo2X_UOCwnD9hg9eRLlEj4GD-64krQE5Lg2c';
+    
+    // تهيئة عميل Supabase
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('mslForm');
+    let targetEventDate = "2026-10-25T09:00:00";
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const isRegistered = localStorage.getItem('msl_registered');
+        if (isRegistered === 'true') {
+            showSuccessScreen();
+        }
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = 'Registering...';
+        btn.disabled = true;
+
+        const payload = {
+            full_name: document.getElementById('fullName').value,
+            gender: document.getElementById('gender').value,
+            college: document.getElementById('college').value,
+            department: document.getElementById('department').value,
+            year_of_study: document.getElementById('yearOfStudy').value,
+            phone_number: document.getElementById('phoneNumber').value,
+            telegram_username: document.getElementById('telegram').value
+        };
+
+        try {
+            const { data, error } = await _supabase
+                .from('registrations')
+                .insert([payload]);
+
+            if (error) {
+                alert('حدث خطأ أثناء التسجيل: ' + error.message);
+                btn.innerText = 'Complete Registration';
+                btn.disabled = false;
+                return;
+            }
+
+            // حفظ البيانات محلياً للتعديل لاحقاً
+            localStorage.setItem('msl_user_data', JSON.stringify(payload));
+            localStorage.setItem('msl_registered', 'true');
+
+            btn.innerText = 'Complete Registration';
+            btn.disabled = false;
+            showSuccessScreen();
+
+        } catch (err) {
+            alert('تعذر الإتصال بالسيرفر، يرجى المحاولة لاحقاً');
+            btn.innerText = 'Complete Registration';
+            btn.disabled = false;
+        }
+    });
+
+    function showSuccessScreen() {
+        document.getElementById('mslForm').style.display = 'none';
+        document.getElementById('successCard').style.display = 'block';
+        startCountdown();
+    }
+
+    function enableEditForm() {
+        const savedData = localStorage.getItem('msl_user_data');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            document.getElementById('fullName').value = data.full_name || '';
+            document.getElementById('gender').value = data.gender || '';
+            document.getElementById('college').value = data.college || '';
+            document.getElementById('department').value = data.department || '';
+            document.getElementById('yearOfStudy').value = data.year_of_study || '';
+            document.getElementById('phoneNumber').value = data.phone_number || '';
+            document.getElementById('telegram').value = data.telegram_username || '';
+        }
+
+        document.getElementById('successCard').style.display = 'none';
+        document.getElementById('mslForm').style.display = 'block';
+    }
+
+    function startCountdown() {
+        function updateTimer() {
+            const eventTime = new Date(targetEventDate).getTime();
+            const now = new Date().getTime();
+            const distance = eventTime - now;
+
+            if (distance > 0) {
+                document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById("seconds").innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+            } else {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+            }
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+</script>
+
+</body>
+</html>
+ion>
+                <option value="Lorcan">Lorcan</option>
+                <option value="New Generation">New Generation</option>
+                <option value="St. Mary">St. Mary</option>
+                <option value="Unity">Unity</option>
+                <option value="Other">Other</option>
+            </select>
+            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-book-open field-icon"></i>
+            <input type="text" id="department" placeholder="Department" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-graduation-cap field-icon"></i>
+            <select id="yearOfStudy" required>
+                <option value="" disabled selected>Year of Study (Select Year)</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="5th Year+">5th Year+</option>
+            </select>
+            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-phone field-icon"></i>
+            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-envelope field-icon"></i>
+            <input type="text" id="telegram" placeholder="Telegram Username">
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Complete Registration</button>
+    </form>
+
+    <!-- Success Confirmation Screen -->
+    <div class="success-card" id="successCard">
+        <h2>Your registration has been successful!</h2>
+
+        <div class="countdown-container">
+            <div class="time-box">
+                <span class="digit" id="days">00</span>
+                <span class="label">days</span>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+                <span class="digit" id="hours">00</span>
+                <span class="label">hours</span>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+                <span class="digit" id="minutes">00</span>
+                <span class="label">minutes</span>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+                <span class="digit" id="seconds">00</span>
+                <span class="label">seconds</span>
+            </div>
+        </div>
+
+        <p class="countdown-footer-text">Left until the event day</p>
+        <div class="see-you-text">See you there!</div>
+
+        <div class="bottom-pattern-wrapper">
+            <div class="bottom-pattern-horizontal"></div>
+        </div>
+
+        <button type="button" class="edit-info-btn" id="editBtn" onclick="enableEditForm()">
+            <i class="fa-solid fa-pen-to-square"></i> Edit Registration Info
+        </button>
+    </div>
+
+    <!-- Footer Card -->
+    <div class="footer-card">
+        <div class="social-icons-row">
+            <i class="fa-brands fa-youtube"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-tiktok"></i>
+            <i class="fa-brands fa-facebook"></i>
+            <i class="fa-brands fa-telegram"></i>
+            <span>@ms_league</span>
+        </div>
+        <div class="footer-contact-info">
+            <div><i class="fa-solid fa-phone"></i> 0962333331/32</div>
+            <div><i class="fa-solid fa-location-dot"></i> Enkulal Fabrica</div>
+        </div>
+    </div>
+</div>
+
+<script>
     // 1. ضع بيانات Supabase الخاصة بكِ هنا
     const SUPABASE_URL = 'YOUR_SUPABASE_URL';
     const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
