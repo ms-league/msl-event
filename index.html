@@ -434,10 +434,9 @@
 </div>
 
 <script>
-    // 1. رابط المشروع في Supabase
-    const SUPABASE_URL = 'https://hfmkrgczbxfrjmhznnqo.supabase.co';
-    // 2. ضعي المفتاح الخاص بكِ مكان النص بين القوسين
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbWtyZ2N6YnhmcmptaHpubnFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTExODksImV4cCI6MjEwNjI2NzE4OX0.yzg16vNVo2X_UOCwnD9hg9eRLlEj4GD-64krQE5Lg2c';
+    // 1. ضع بيانات Supabase الخاصة بكِ هنا
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
     
     // تهيئة عميل Supabase
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -465,7 +464,7 @@
             department: document.getElementById('department').value,
             year_of_study: document.getElementById('yearOfStudy').value,
             phone_number: document.getElementById('phoneNumber').value,
-            telegram_username: document.getElementById('telegram').value
+            telegram: document.getElementById('telegram').value
         };
 
         try {
@@ -511,7 +510,7 @@
             document.getElementById('department').value = data.department || '';
             document.getElementById('yearOfStudy').value = data.year_of_study || '';
             document.getElementById('phoneNumber').value = data.phone_number || '';
-            document.getElementById('telegram').value = data.telegram_username || '';
+            document.getElementById('telegram').value = data.telegram || '';
         }
 
         document.getElementById('successCard').style.display = 'none';
