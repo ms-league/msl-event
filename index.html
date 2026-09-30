@@ -431,10 +431,11 @@
     </div>
 </div>
 
-<script>
+            <script>
     const form = document.getElementById('mslForm');
     let targetEventDate = "2026-10-25T09:00:00";
 
+    // عند تحميل الصفحة، التأكد إن كان المستخدم مسجلاً من قبل
     window.addEventListener('DOMContentLoaded', () => {
         const isRegistered = localStorage.getItem('msl_registered');
         if (isRegistered === 'true') {
@@ -442,49 +443,19 @@
         }
     });
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = 'Registering...';
-        btn.disabled = true;
-
-        const formData = new FormData(form);
-
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                const payload = {
-                    fullName: document.getElementById('fullName').value,
-                    gender: document.getElementById('gender').value,
-                    college: document.getElementById('college').value,
-                    department: document.getElementById('department').value,
-                    yearOfStudy: document.getElementById('yearOfStudy').value,
-                    phoneNumber: document.getElementById('phoneNumber').value,
-                    telegram: document.getElementById('telegram').value
-                };
-                localStorage.setItem('msl_user_data', JSON.stringify(payload));
-                localStorage.setItem('msl_registered', 'true');
-                btn.innerText = 'Complete Registration';
-                btn.disabled = false;
-                showSuccessScreen();
-            } else {
-                alert('حدث خطأ في استقبال البيانات من Formspree، يرجى التأكد من تفعيل الحساب.');
-                btn.innerText = 'Complete Registration';
-                btn.disabled = false;
-            }
-        } catch (err) {
-            console.error(err);
-            alert('حدث خطأ في الاتصال، يرجى إعادة المحاولة.');
-            btn.innerText = 'Complete Registration';
-            btn.disabled = false;
-        }
+    // حفظ البيانات محلياً قبل إرسال النموذج مباشرة
+    form.addEventListener('submit', () => {
+        const payload = {
+            fullName: document.getElementById('fullName').value,
+            gender: document.getElementById('gender').value,
+            college: document.getElementById('college').value,
+            department: document.getElementById('department').value,
+            yearOfStudy: document.getElementById('yearOfStudy').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            telegram: document.getElementById('telegram').value
+        };
+        localStorage.setItem('msl_user_data', JSON.stringify(payload));
+        localStorage.setItem('msl_registered', 'true');
     });
 
     function showSuccessScreen() {
@@ -533,6 +504,7 @@
         setInterval(updateTimer, 1000);
     }
 </script>
+
 
 </body>
 </html>
