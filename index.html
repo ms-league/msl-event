@@ -314,12 +314,12 @@
     <form id="mslForm" class="form-card">
         <div class="input-group">
             <i class="fa-solid fa-user field-icon"></i>
-            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
         </div>
 
         <div class="input-group">
             <i class="fa-solid fa-id-card field-icon"></i>
-            <select id="gender" required>
+            <select id="gender" name="gender" required>
                 <option value="" disabled selected>Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -328,7 +328,7 @@
 
         <div class="input-group">
             <i class="fa-solid fa-building-columns field-icon"></i>
-            <select id="college" required>
+            <select id="college" name="college" required>
                 <option value="" disabled selected>College (Select institution)</option>
                 <option value="Allcan">Allcan</option>
                 <option value="Atlas">Atlas</option>
@@ -347,12 +347,12 @@
 
         <div class="input-group">
             <i class="fa-solid fa-book-open field-icon"></i>
-            <input type="text" id="department" placeholder="Department" required>
+            <input type="text" id="department" name="department" placeholder="Department" required>
         </div>
 
         <div class="input-group">
             <i class="fa-solid fa-graduation-cap field-icon"></i>
-            <select id="yearOfStudy" required>
+            <select id="yearOfStudy" name="yearOfStudy" required>
                 <option value="" disabled selected>Year of Study (Select Year)</option>
                 <option value="1st Year">1st Year</option>
                 <option value="2nd Year">2nd Year</option>
@@ -365,12 +365,12 @@
 
         <div class="input-group">
             <i class="fa-solid fa-phone field-icon"></i>
-            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
         </div>
 
         <div class="input-group">
             <i class="fa-solid fa-envelope field-icon"></i>
-            <input type="text" id="telegram" placeholder="Telegram Username">
+            <input type="text" id="telegram" name="telegram" placeholder="Telegram Username">
         </div>
 
         <button type="submit" class="submit-btn" id="submitBtn">Complete Registration</button>
@@ -432,26 +432,11 @@
 </div>
 
 <script>
-    // 1. إعدادات GitHub الخاصة بالمستودع
-    const GITHUB_REPO = "ms-league/msl-event"; // استبدلي بـ: اسم_المستخدم/اسم_المستودع
-    const FILE_PATH = "students.json";
-    const GITHUB_TOKEN = "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"; // GitHub Personal Access Token
+    // رابط Formspree المباشر الخاص بنموذج MSL
+    const FORMSPREE_URL = "https://formspree.io/f/mqaeardg"; 
 
     const form = document.getElementById('mslForm');
     let targetEventDate = "2026-10-25T09:00:00";
-
-    // دالة الترميز الآمن لدعم اللغة العربية والرموز
-    function unicodeToBase64(str) {
-        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-            return String.fromCharCode('0x' + p1);
-        }));
-    }
-
-    function base64ToUnicode(str) {
-        return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-    }
 
     window.addEventListener('DOMContentLoaded', () => {
         const isRegistered = localStorage.getItem('msl_registered');
@@ -478,52 +463,24 @@
         };
 
         try {
-            const getUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`;
-            
-            // 1. جلب الملف الحالي من GitHub
-            const getRes = await fetch(getUrl, {
-                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-            });
-
-            let currentData = [];
-            let fileSha = "";
-
-            if (getRes.status === 200) {
-                const fileJson = await getRes.json();
-                fileSha = fileJson.sha;
-                const cleanContent = fileJson.content.replace(/\s/g, '');
-                currentData = JSON.parse(base64ToUnicode(cleanContent));
-            }
-
-            // 2. إضافة الطالب الجديد للقائمة
-            currentData.push(payload);
-
-            // 3. رفع الملف المحدث إلى GitHub
-            const putRes = await fetch(getUrl, {
-                method: 'PUT',
+            const response = await fetch(FORMSPREE_URL, {
+                method: 'POST',
                 headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    message: `New Registration: ${payload.fullName}`,
-                    content: unicodeToBase64(JSON.stringify(currentData, null, 2)),
-                    sha: fileSha !== "" ? fileSha : undefined
-                })
+                body: JSON.stringify(payload)
             });
 
-            if (!putRes.ok) {
-                throw new Error(`GitHub API Error: ${putRes.statusText}`);
+            if (response.ok) {
+                localStorage.setItem('msl_user_data', JSON.stringify(payload));
+                localStorage.setItem('msl_registered', 'true');
+                btn.innerText = 'Complete Registration';
+                btn.disabled = false;
+                showSuccessScreen();
+            } else {
+                throw new Error('Formspree response not ok');
             }
-
-            // حفظ البيانات محلياً للتعديل لاحقاً
-            localStorage.setItem('msl_user_data', JSON.stringify(payload));
-            localStorage.setItem('msl_registered', 'true');
-
-            btn.innerText = 'Complete Registration';
-            btn.disabled = false;
-            showSuccessScreen();
-
         } catch (err) {
             console.error(err);
             alert('حدث خطأ أثناء التسجيل، يرجى إعادة المحاولة لاحقاً.');
