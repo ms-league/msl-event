@@ -96,15 +96,9 @@
             border-radius: 28px;
         }
 
-        .name-row {
-            display: flex;
-            gap: 10px;
-        }
-
         .input-group {
             position: relative;
             margin-bottom: 12px;
-            width: 100%;
         }
 
         .input-group i.field-icon {
@@ -117,17 +111,6 @@
             z-index: 2;
         }
 
-        .phone-prefix {
-            position: absolute;
-            left: 44px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #4a5568;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 2;
-        }
-
         .input-group input, .input-group select {
             width: 100%;
             padding: 12px 18px 12px 46px;
@@ -137,10 +120,6 @@
             font-size: 14px;
             color: #4a5568;
             background-color: #ffffff;
-        }
-
-        .input-group input.phone-input {
-            padding-left: 88px;
         }
 
         .input-group select {
@@ -294,32 +273,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .social-icons-row a {
-            color: #ffffff;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        .social-icons-row a:hover {
-            opacity: 0.8;
+            font-size: 14px;
         }
 
         .footer-contact-info {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             font-size: 12px;
             opacity: 0.95;
         }
 
-        .footer-contact-info a {
-            color: #ffffff;
-            text-decoration: none;
+        .footer-contact-info div {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -345,16 +312,9 @@
 
     <!-- Registration Form -->
     <form id="mslForm" class="form-card">
-        <!-- Split Name into First Name & Last Name -->
-        <div class="name-row">
-            <div class="input-group">
-                <i class="fa-solid fa-user field-icon"></i>
-                <input type="text" id="firstName" name="firstName" placeholder="First Name" pattern="[A-Za-z\s]+" title="Letters only" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')" required>
-            </div>
-            <div class="input-group">
-                <i class="fa-solid fa-user field-icon"></i>
-                <input type="text" id="lastName" name="lastName" placeholder="Last Name" pattern="[A-Za-z\s]+" title="Letters only" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')" required>
-            </div>
+        <div class="input-group">
+            <i class="fa-solid fa-user field-icon"></i>
+            <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
         </div>
 
         <div class="input-group">
@@ -403,11 +363,9 @@
             <i class="fa-solid fa-chevron-down arrow-icon"></i>
         </div>
 
-        <!-- Phone Number restricted to 9 digits with +251 -->
         <div class="input-group">
             <i class="fa-solid fa-phone field-icon"></i>
-            <span class="phone-prefix">+251</span>
-            <input type="tel" id="phoneNumber" class="phone-input" name="phoneNumber" placeholder="912345678" maxlength="9" pattern="[0-9]{9}" title="Enter 9 digits" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
         </div>
 
         <div class="input-group">
@@ -456,19 +414,19 @@
         </button>
     </div>
 
-    <!-- Footer Card with Clickable Links -->
+    <!-- Footer Card -->
     <div class="footer-card">
         <div class="social-icons-row">
-            <a href="https://youtube.com/@ms_league" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-            <a href="https://instagram.com/ms_league" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://tiktok.com/@ms_league" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://facebook.com/ms_league" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://t.me/ms_league" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-            <a href="https://t.me/ms_league" target="_blank" style="font-size:13px;">@ms_league</a>
+            <i class="fa-brands fa-youtube"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-tiktok"></i>
+            <i class="fa-brands fa-facebook"></i>
+            <i class="fa-brands fa-telegram"></i>
+            <span>@ms_league</span>
         </div>
         <div class="footer-contact-info">
-            <div><a href="tel:+251962333331"><i class="fa-solid fa-phone"></i> 0962333331/32</a></div>
-            <div><a href="https://maps.google.com/?q=Enkulal+Fabrica" target="_blank"><i class="fa-solid fa-location-dot"></i> Enkulal Fabrica</a></div>
+            <div><i class="fa-solid fa-phone"></i> 0962333331/32</div>
+            <div><i class="fa-solid fa-location-dot"></i> Enkulal Fabrica</div>
         </div>
     </div>
 </div>
@@ -477,6 +435,7 @@
     const form = document.getElementById('mslForm');
     let targetEventDate = "2026-10-25T09:00:00";
 
+    // ضعِ بيانات البوت هنا
     const TELEGRAM_BOT_TOKEN = "8807303471:AAGYpNIV5TX-CHBRsRxf3Wmywf5Q-36XKL4";
     const TELEGRAM_CHAT_ID = "1070281763";
 
@@ -493,16 +452,15 @@
         btn.innerText = 'Registering...';
         btn.disabled = true;
 
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        const fullName = `${firstName} ${lastName}`;
+        const fullName = document.getElementById('fullName').value;
         const gender = document.getElementById('gender').value;
         const college = document.getElementById('college').value;
         const department = document.getElementById('department').value;
         const yearOfStudy = document.getElementById('yearOfStudy').value;
-        const phoneNumber = "+251" + document.getElementById('phoneNumber').value;
+        const phoneNumber = document.getElementById('phoneNumber').value;
         const telegram = document.getElementById('telegram').value;
 
+        // تنسيق الرسالة لتصل مرتبة في تيليجرام
         const message = `🎯 *تسجيل جديد في Welcoming Event*:\n\n` +
                         `👤 *الاسم:* ${fullName}\n` +
                         `👫 *الجنس:* ${gender}\n` +
@@ -524,20 +482,20 @@
             });
 
             if (response.ok) {
-                const payload = { firstName, lastName, gender, college, department, yearOfStudy, phoneNumber, telegram };
+                const payload = { fullName, gender, college, department, yearOfStudy, phoneNumber, telegram };
                 localStorage.setItem('msl_user_data', JSON.stringify(payload));
                 localStorage.setItem('msl_registered', 'true');
                 btn.innerText = 'Complete Registration';
                 btn.disabled = false;
                 showSuccessScreen();
             } else {
-                alert('حدث خطأ أثناء الإرسال، يرجى التأكد من التوكين.');
+                alert('حدث خطأ أثناء الإرسال إلى البوت، يرجى التأكد من Token و Chat ID.');
                 btn.innerText = 'Complete Registration';
                 btn.disabled = false;
             }
         } catch (err) {
             console.error(err);
-            alert('حدث خطأ في الاتصال.');
+            alert('حدث خطأ في الاتصال، يرجى إعادة المحاولة.');
             btn.innerText = 'Complete Registration';
             btn.disabled = false;
         }
@@ -553,18 +511,42 @@
         const savedData = localStorage.getItem('msl_user_data');
         if (savedData) {
             const data = JSON.parse(savedData);
-            document.getElementById('firstName').value = data.firstName || '';
-            document.getElementById('lastName').value = data.lastName || '';
+            document.getElementById('fullName').value = data.fullName || '';
             document.getElementById('gender').value = data.gender || '';
             document.getElementById('college').value = data.college || '';
             document.getElementById('department').value = data.department || '';
             document.getElementById('yearOfStudy').value = data.yearOfStudy || '';
-            if (data.phoneNumber) {
-                document.getElementById('phoneNumber').value = data.phoneNumber.replace('+251', '');
-            }
+            document.getElementById('phoneNumber').value = data.phoneNumber || '';
             document.getElementById('telegram').value = data.telegram || '';
         }
 
         document.getElementById('successCard').style.display = 'none';
         document.getElementById('mslForm').style.display = 'block';
-  
+    }
+
+    function startCountdown() {
+        function updateTimer() {
+            const eventTime = new Date(targetEventDate).getTime();
+            const now = new Date().getTime();
+            const distance = eventTime - now;
+
+            if (distance > 0) {
+                document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById("seconds").innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+            } else {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+            }
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+</script>
+
+</body>
+</html>
