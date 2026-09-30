@@ -431,11 +431,9 @@
     </div>
 </div>
 
-            <script>
-    const form = document.getElementById('mslForm');
+    <script>
     let targetEventDate = "2026-10-25T09:00:00";
 
-    // عند تحميل الصفحة، التأكد إن كان المستخدم مسجلاً من قبل
     window.addEventListener('DOMContentLoaded', () => {
         const isRegistered = localStorage.getItem('msl_registered');
         if (isRegistered === 'true') {
@@ -443,8 +441,8 @@
         }
     });
 
-    // حفظ البيانات محلياً قبل إرسال النموذج مباشرة
-    form.addEventListener('submit', () => {
+    // حفظ البيانات في المتصفح قبل إرسال النموذج تلقائياً لـ Formspree
+    function saveDataBeforeSubmit() {
         const payload = {
             fullName: document.getElementById('fullName').value,
             gender: document.getElementById('gender').value,
@@ -456,7 +454,7 @@
         };
         localStorage.setItem('msl_user_data', JSON.stringify(payload));
         localStorage.setItem('msl_registered', 'true');
-    });
+    }
 
     function showSuccessScreen() {
         document.getElementById('mslForm').style.display = 'none';
