@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MSL Welcoming Event Registration</title>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -35,7 +34,6 @@
             flex-direction: column;
         }
 
-        /* Header Section */
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -88,7 +86,6 @@
             margin-top: 4px;
         }
 
-        /* Form Card */
         .form-card {
             background-color: #2d6a4f;
             margin: 10px 14px 14px;
@@ -99,6 +96,7 @@
         .input-group {
             position: relative;
             margin-bottom: 12px;
+            width: 100%;
         }
 
         .input-group i.field-icon {
@@ -156,7 +154,6 @@
             color: #2d6a4f;
         }
 
-        /* Success Card */
         .success-card {
             display: none;
             background-color: #2d6a4f;
@@ -259,7 +256,6 @@
             color: #2d6a4f;
         }
 
-        /* Footer Card */
         .footer-card {
             background-color: #2d6a4f;
             margin: 0 14px 14px;
@@ -273,31 +269,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             margin-bottom: 8px;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .footer-contact-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
             font-size: 12px;
             opacity: 0.95;
-        }
-
-        .footer-contact-info div {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
     </style>
 </head>
 <body>
 
 <div class="main-wrapper">
-    <!-- Header Section -->
     <div class="header-section">
         <div class="pattern-side-left"></div>
         <div class="header-content">
@@ -310,7 +298,6 @@
         <div class="pattern-side-right"></div>
     </div>
 
-    <!-- Registration Form -->
     <form id="mslForm" class="form-card">
         <div class="input-group">
             <i class="fa-solid fa-user field-icon"></i>
@@ -376,7 +363,6 @@
         <button type="submit" class="submit-btn" id="submitBtn">Complete Registration</button>
     </form>
 
-    <!-- Success Confirmation Screen -->
     <div class="success-card" id="successCard">
         <h2>Your registration has been successful!</h2>
 
@@ -414,7 +400,6 @@
         </button>
     </div>
 
-    <!-- Footer Card -->
     <div class="footer-card">
         <div class="social-icons-row">
             <i class="fa-brands fa-youtube"></i>
@@ -422,7 +407,7 @@
             <i class="fa-brands fa-tiktok"></i>
             <i class="fa-brands fa-facebook"></i>
             <i class="fa-brands fa-telegram"></i>
-            <span>@ms_league</span>
+            <span style="font-size:13px; margin-left:4px;">@ms_league</span>
         </div>
         <div class="footer-contact-info">
             <div><i class="fa-solid fa-phone"></i> 0962333331/32</div>
@@ -435,7 +420,6 @@
     const form = document.getElementById('mslForm');
     let targetEventDate = "2026-10-25T09:00:00";
 
-    // ضعِ بيانات البوت هنا
     const TELEGRAM_BOT_TOKEN = "8807303471:AAGYpNIV5TX-CHBRsRxf3Wmywf5Q-36XKL4";
     const TELEGRAM_CHAT_ID = "1070281763";
 
@@ -460,7 +444,6 @@
         const phoneNumber = document.getElementById('phoneNumber').value;
         const telegram = document.getElementById('telegram').value;
 
-        // تنسيق الرسالة لتصل مرتبة في تيليجرام
         const message = `🎯 *تسجيل جديد في Welcoming Event*:\n\n` +
                         `👤 *الاسم:* ${fullName}\n` +
                         `👫 *الجنس:* ${gender}\n` +
@@ -489,13 +472,13 @@
                 btn.disabled = false;
                 showSuccessScreen();
             } else {
-                alert('حدث خطأ أثناء الإرسال إلى البوت، يرجى التأكد من Token و Chat ID.');
+                alert('حدث خطأ أثناء الإرسال، يرجى التأكد من التوكين.');
                 btn.innerText = 'Complete Registration';
                 btn.disabled = false;
             }
         } catch (err) {
             console.error(err);
-            alert('حدث خطأ في الاتصال، يرجى إعادة المحاولة.');
+            alert('حدث خطأ في الاتصال.');
             btn.innerText = 'Complete Registration';
             btn.disabled = false;
         }
