@@ -450,7 +450,7 @@
                         `🏛 *الكلية:* ${college}\n` +
                         `📚 *القسم:* ${department}\n` +
                         `🎓 *السنة:* ${yearOfStudy}\n` +
-                        `📞 *الهاتف:* ${phoneNumber}\n`
+                        `📞 *الهاتف:* ${phoneNumber}\n`;
 
         try {
             const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -464,7 +464,7 @@
             });
 
             if (response.ok) {
-                const payload = { fullName, gender, college, department, yearOfStudy, phoneNumber, telegram };
+                const payload = { fullName, gender, college, department, yearOfStudy, phoneNumber };
                 localStorage.setItem('msl_user_data', JSON.stringify(payload));
                 localStorage.setItem('msl_registered', 'true');
                 btn.innerText = 'Complete Registration';
@@ -499,7 +499,6 @@
             document.getElementById('department').value = data.department || '';
             document.getElementById('yearOfStudy').value = data.yearOfStudy || '';
             document.getElementById('phoneNumber').value = data.phoneNumber || '';
-            document.getElementById('telegram').value = data.telegram || '';
         }
 
         document.getElementById('successCard').style.display = 'none';
@@ -529,6 +528,5 @@
         setInterval(updateTimer, 1000);
     }
 </script>
-
 </body>
 </html>
