@@ -363,7 +363,7 @@
 
         <div class="input-group">
             <i class="fa-solid fa-envelope field-icon"></i>
-            <input type="text" id="e-mail" name="e-mail" placeholder="E-mail Address">
+            <input type="text" id="telegramPhone" name="telegramPhone" placeholder="Telegram phone nō (optional)">
         </div>
 
         <button type="submit" class="submit-btn" id="submitBtn">Complete Registration</button>
@@ -448,7 +448,7 @@
         const department = document.getElementById('department').value;
         const yearOfStudy = document.getElementById('yearOfStudy').value;
         const phoneNumber = document.getElementById('phoneNumber').value;
-        const telegram = document.getElementById('telegram').value;
+        const telegramPhone = document.getElementById('telegramPhone')?.value || 'غير محدد';
 
         const message = `🎯 *تسجيل جديد في Welcoming Event*:\n\n` +
                         `👤 *الاسم:* ${fullName}\n` +
