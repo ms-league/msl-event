@@ -535,6 +535,34 @@
         updateTimer();
         setInterval(updateTimer, 1000);
     }
+    // 1. تجميع بيانات الاستمارة في نص واحد
+const messageText = `
+📌 تسجیل جدید:
+الاسم: ${nameInput}
+الجنس: ${genderInput}
+القسم: ${departmentInput}
+السنة: ${yearInput}
+الهاتف: ${phoneInput}
+التليجرام: ${telegramInput}
+`;
+
+// 2. تشفير النص لمنع انكسار الرابط بسبب الرموز مثل @ أو المسافات
+const safeText = encodeURIComponent(messageText);
+
+// 3. إرسال الطلب مع معالجة حكيمة للأخطاء
+fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${safeText}`)
+  .then(response => {
+    if (!response.ok) throw new Error("شبكة");
+    return response.json();
+  })
+  .then(data => {
+    alert("تم التسجيل بنجاح! شكراً لك.");
+  })
+  .catch(error => {
+    // رسالة وديدة للمستخدم بدلاً من إظهار مصطلحات تقنية
+    alert("تعذر إرسال البيانات حالياً. يرجى التأكد من اتصال الإنترنت أو إيقاف مانع الإعلانات (Ad-blocker) وإعادة المحاولة.");
+  });
+    
 </script>
 
 </body>
